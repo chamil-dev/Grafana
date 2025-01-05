@@ -17,6 +17,6 @@ git clone https://github.com/chamil-dev/Grafana.git
 Now start the VirtualBox software and if all files are in place type following command to
 bootstrap the virtual machine.
 
-vagrant up 
+## vagrant up 
 
 

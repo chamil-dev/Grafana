@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: docker.io/library/mysql:8.0
+    container_name: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: grafana
+      MYSQL_USER: grafana
+      MYSQL_PASSWORD: grafana
+    volumes:
+      - mysql_data:/var/lib/mysql:rw
+    ports:
+      - "3306:3306"
+    networks:
+      - grafana_network
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    restart: always
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafana_data:/var/lib/grafana:rw
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mysql
+    networks:
+      - grafana_network
+
+  phpmyadmin:
+    image: docker.io/phpmyadmin/phpmyadmin:latest
+    container_name: phpmyadmin
+    restart: always
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 1
+    ports:
+      - "8080:80"  # phpMyAdmin accessible at http://localhost:8080
+    depends_on:
+      - mysql
+    networks:
+      - grafana_network
+
+networks:
+  grafana_network:
+    driver: bridge
+
+volumes:
+  mysql_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: /var/lib/mysql_data
+      o: bind
+  grafana_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: /var/lib/grafana_data
+      o: bind

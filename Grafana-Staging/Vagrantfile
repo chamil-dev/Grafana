@@ -1,0 +1,20 @@
+Vagrant.configure("2") do |config|
+
+  config.vm.box = "generic/rocky8"
+  
+  config.vm.define :grafana do |grafana_config|
+    grafana_config.vm.provision :shell, path: "bootstrap.sh"
+    grafana_config.vm.host_name = "grafana"
+    grafana_config.vm.network "private_network", ip: "192.168.100.10"
+    grafana_config.vm.network "forwarded_port", guest: 3000, host: 3000 # Grafana
+    grafana_config.vm.network "forwarded_port", guest: 3306, host: 3306 # MySQL
+    # Sync project folder to custom path
+	grafana_config.vm.synced_folder ".", "/project"
+    grafana_config.vm.boot_timeout = 300
+
+    grafana_config.vm.provider :virtualbox do |vb|
+      vb.customize ["modifyvm", :id, "--memory", "8192"]
+      vb.customize ["modifyvm", :id, "--cpus", "4"]
+    end
+  end
+end

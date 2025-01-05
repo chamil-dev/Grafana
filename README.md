@@ -14,7 +14,7 @@ https://developer.hashicorp.com/vagrant/docs/installation
 git clone https://github.com/chamil-dev/Grafana.git
 
 # Open command Line and Change directory to Grafana-Staging
-# Now start the VirtualBox software and if all files are in place type following command to
+Now start the VirtualBox software and if all files are in place type following command to
 bootstrap the virtual machine.
 
 vagrant up 
